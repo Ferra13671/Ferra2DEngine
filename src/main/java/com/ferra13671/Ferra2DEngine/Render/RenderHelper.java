@@ -1,11 +1,10 @@
 package com.ferra13671.Ferra2DEngine.Render;
 
-import com.ferra13671.Ferra2DEngine.Render.TextRenderer.TextRenderer;
-import com.ferra13671.Ferra2DEngine.Render.TextRenderer.TextWithSize;
+import com.ferra13671.Ferra2DEngine.Render.FontRenderer.FontRenderer;
+import com.ferra13671.Ferra2DEngine.Render.FontRenderer.FontUtils;
 import com.ferra13671.Ferra2DEngine.Utils.Math.FerraMath;
 import com.ferra13671.Ferra2DEngine.Utils.RainbowUtils;
 import com.ferra13671.TextureUtils.GLTexture;
-import com.ferra13671.TextureUtils.PathMode;
 import org.lwjgl.system.MemoryUtil;
 
 import java.awt.*;
@@ -25,7 +24,7 @@ public class RenderHelper {
     private static final FloatBuffer customTextureCords = MemoryUtil.memAlloc(8 * Float.BYTES).order(ByteOrder.nativeOrder()).asFloatBuffer();
     private static final FloatBuffer rectVertex = MemoryUtil.memAlloc(8 * Float.BYTES).order(ByteOrder.nativeOrder()).asFloatBuffer();
 
-    public static TextRenderer textRenderer;
+    public static FontRenderer fontRenderer;
 
     public static final DecimalFormat decimalFormat = new DecimalFormat("#0.00");
 
@@ -33,7 +32,7 @@ public class RenderHelper {
 
     public static void init() {
         if (!initialized) {
-            textRenderer = new TextRenderer(GLTexture.fromPath("Resources/FontAtlases/font1.png", PathMode.INSIDEJAR, GLTexture.ColorMode.RGBA), GLTexture.fromPath("Resources/FontAtlases/font4.png", PathMode.INSIDEJAR, GLTexture.ColorMode.RGBA));
+            fontRenderer = new FontRenderer(FontUtils.createFontNoThrow(RenderHelper.class.getClassLoader().getResourceAsStream("defaultFont.ttf"), 17), 30);
             initialized = true;
         }
     }
@@ -587,11 +586,16 @@ public class RenderHelper {
      * @param text   Text to be drawn.
      * @param x   Initial x coordinate.
      * @param y   Initial y coordinate.
-     * @param size   Text size(in pixels).
+     * @param size   Text size(default = 1).
      * @param color   Text Color.
      */
-    public static void drawText(String text, float x, float y, int size, Color color) {
-        textRenderer.renderText(text, x, y, size, color);
+    public static void drawText(String text, float x, float y, float size, Color color) {
+        if (size != 1) {
+            glPushMatrix();
+            glScalef(size, size, 1);
+        }
+        fontRenderer.draw(text, x, y, color.hashCode(), false);
+        if (size != 1) glPopMatrix();
     }
 
     /**
@@ -600,32 +604,14 @@ public class RenderHelper {
      * @param text   Text to be drawn.
      * @param x   Initial x coordinate.
      * @param y   Initial y coordinate.
-     * @param size   Text size(in pixels).
+     * @param size   Text size(default = 1).
      */
     public static void drawText(String text, float x, float y, int size) {
-        textRenderer.renderText(text, x, y, size, Color.white);
-    }
-
-    /**
-     * Draws text with size starting at the specified coordinates and color.
-     *
-     * @param text   Text with size(in pixels) to be drawn.
-     * @param x   Initial x coordinate.
-     * @param y   Initial y coordinate.
-     * @param color   Text Color.
-     */
-    public static void drawText(TextWithSize text, float x, float y, Color color) {
-        textRenderer.renderText(text, x, y, color);
-    }
-
-    /**
-     * Draws text with size starting at the specified coordinates. White is used as the color.
-     *
-     * @param text   Text with size(in pixels) to be drawn.
-     * @param x   Initial x coordinate.
-     * @param y   Initial y coordinate.
-     */
-    public static void drawText(TextWithSize text, float x, float y) {
-        textRenderer.renderText(text, x, y, Color.white);
+        if (size != 1) {
+            glPushMatrix();
+            glScalef(size, size, 1);
+        }
+        fontRenderer.draw(text, x, y, -1, false);
+        if (size != 1) glPopMatrix();
     }
 }

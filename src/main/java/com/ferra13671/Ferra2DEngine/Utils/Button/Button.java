@@ -2,7 +2,6 @@ package com.ferra13671.Ferra2DEngine.Utils.Button;
 
 
 import com.ferra13671.Ferra2DEngine.Render.RenderHelper;
-import com.ferra13671.Ferra2DEngine.Render.TextRenderer.TextWithSize;
 
 import java.awt.*;
 
@@ -16,7 +15,7 @@ public class Button {
     private int width;
     private int height;
 
-    public TextWithSize text;
+    public String text;
 
     public boolean hovered;
 
@@ -25,7 +24,7 @@ public class Button {
 
 
 
-    public Button(int id, int x, int y, int width, int height, TextWithSize text) {
+    public Button(int id, int x, int y, int width, int height, String text) {
         this.id = id;
 
         this.centerX = x;
@@ -66,7 +65,7 @@ public class Button {
             if (outline)
                 RenderHelper.drawOutlineRect(getCenterX() - this.width - 1, getCenterY() - this.height - 1, getCenterX() + this.width + 1, getCenterY() + this.height + 1, 1, Color.white);
         }
-        RenderHelper.textRenderer.renderText(getText(), (getCenterX() - (RenderHelper.textRenderer.getStringWidth(getText()) / 2)), (getCenterY() - (getText().size / 2f)));
+        RenderHelper.fontRenderer.draw(getText(), (getCenterX() - (RenderHelper.fontRenderer.getStringWidth(getText()) / 2)), (getCenterY() - (RenderHelper.fontRenderer.getStringHeight(getText()) / 2f)), -1, false);
     }
 
 
@@ -100,7 +99,7 @@ public class Button {
         return this.height;
     }
 
-    public TextWithSize getText() {
+    public String getText() {
         return text;
     }
 
@@ -120,7 +119,7 @@ public class Button {
         this.height = height;
     }
 
-    public void setText(TextWithSize text) {
+    public void setText(String text) {
         this.text = text;
     }
 }

@@ -2,7 +2,6 @@ package com.ferra13671.Ferra2DEngine.Utils.Button.Buttons;
 
 
 import com.ferra13671.Ferra2DEngine.Render.RenderHelper;
-import com.ferra13671.Ferra2DEngine.Render.TextRenderer.TextWithSize;
 import com.ferra13671.Ferra2DEngine.Utils.Button.Button;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ public class ModeButton extends Button {
     int index = 0;
     String sVal;
 
-    public ModeButton(int id, int centerX, int centerY, int width, int height, TextWithSize text, ArrayList<String> options) {
+    public ModeButton(int id, int centerX, int centerY, int width, int height, String text, ArrayList<String> options) {
         super(id, centerX, centerY, width, height, text);
 
         this.options = options;
@@ -26,13 +25,13 @@ public class ModeButton extends Button {
         if (!this.hovered) {
             RenderHelper.drawRect(getCenterX() - getWidth(), getCenterY() - getHeight(), getCenterX() + getWidth(), getCenterY() + getHeight(), rectColor);
 
-            RenderHelper.drawText(getText(), (int) (getCenterX() - getHalfTextWidth()), getCenterY() - (text.size / 2f));
+            RenderHelper.drawText(getText(), (int) (getCenterX() - getHalfTextWidth()), getCenterY() - (RenderHelper.fontRenderer.getStringHeight(getText()) / 2f), 1);
         } else {
             RenderHelper.drawRect(getCenterX() - getWidth() - 1, getCenterY() - getHeight() - 1, getCenterX() + getWidth() + 1, getCenterY() + getHeight() + 1, rectColor);
 
             RenderHelper.drawHorizontalGradientRect((int)(getCenterX() - (getWidth() * 0.8)), getCenterY() + getHeight() - 4, getCenterX(), getCenterY() + getHeight() - 2, alphaColor, whiteColor);
             RenderHelper.drawHorizontalGradientRect(getCenterX(), getCenterY() + getHeight() - 4, (int)(getCenterX() + (getWidth() * 0.8)), getCenterY() + getHeight() - 2, whiteColor, alphaColor);
-            RenderHelper.drawText(getText(), (int) (getCenterX() - getHalfTextWidth()), getCenterY() - (text.size / 2f));
+            RenderHelper.drawText(getText(), (int) (getCenterX() - getHalfTextWidth()), getCenterY() - (RenderHelper.fontRenderer.getStringHeight(getText()) / 2f), 1);
         }
     }
 
@@ -50,8 +49,8 @@ public class ModeButton extends Button {
     }
 
     @Override
-    public TextWithSize getText() {
-        return new TextWithSize(text.text + ": " + sVal, text.size);
+    public String getText() {
+        return text + ": " + sVal;
     }
 
 
@@ -60,6 +59,6 @@ public class ModeButton extends Button {
     }
 
     public float getHalfTextWidth() {
-        return (RenderHelper.textRenderer.getStringWidth(getText()) / 2f);
+        return (RenderHelper.fontRenderer.getStringWidth(getText()) / 2f);
     }
 }

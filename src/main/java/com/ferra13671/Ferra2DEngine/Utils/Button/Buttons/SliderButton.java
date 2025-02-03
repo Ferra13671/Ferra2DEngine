@@ -1,7 +1,6 @@
 package com.ferra13671.Ferra2DEngine.Utils.Button.Buttons;
 
 import com.ferra13671.Ferra2DEngine.Render.RenderHelper;
-import com.ferra13671.Ferra2DEngine.Render.TextRenderer.TextWithSize;
 import com.ferra13671.Ferra2DEngine.Utils.Button.Button;
 
 import java.awt.*;
@@ -17,7 +16,7 @@ public class SliderButton extends Button {
 
     private double renderWidth;
 
-    public SliderButton(int id, int x, int y, int width, int height, TextWithSize text, double defaultValue, double min, double max) {
+    public SliderButton(int id, int x, int y, int width, int height, String text, double defaultValue, double min, double max) {
         super(id, x, y, width, height, text);
         this.min = min;
         this.max = max;
@@ -32,7 +31,7 @@ public class SliderButton extends Button {
 
         RenderHelper.drawOutlineRect(getCenterX() - getWidth(), getCenterY() - getHeight(), getCenterX() + getWidth(), getCenterY() + getHeight(), 1, Color.white);
 
-        RenderHelper.drawText(new TextWithSize(getText().text + ": " + value, getText().size), getCenterX() - getWidth() + 3, getCenterY() - (getText().size / 2f));
+        RenderHelper.drawText(getText() + ": " + value, getCenterX() - getWidth() + 3, getCenterY() - (RenderHelper.fontRenderer.getStringHeight(getText()) / 2f), 1);
     }
 
     @Override

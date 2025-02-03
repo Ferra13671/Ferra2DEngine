@@ -2,7 +2,6 @@ package com.ferra13671.Ferra2DEngine.Utils.Button.Buttons;
 
 import com.ferra13671.Ferra2DEngine.IO.KeyboardUtils;
 import com.ferra13671.Ferra2DEngine.Render.RenderHelper;
-import com.ferra13671.Ferra2DEngine.Render.TextRenderer.TextWithSize;
 import com.ferra13671.Ferra2DEngine.Utils.Button.Button;
 import com.ferra13671.Ferra2DEngine.Utils.ListUtils;
 
@@ -15,14 +14,11 @@ public class NumberFrameButton extends Button {
 
     private boolean selected = false;
 
-    private final int textSize;
-
     private final Set<String> keys = ListUtils.newHashSet("1","2","3","4","5","6","7","8","9","0");
 
 
-    public NumberFrameButton(int id, int centerX, int centerY, int width, int height, int textSize) {
-        super(id,centerX,centerY, width, height, new TextWithSize("", 0));
-        this.textSize = textSize;
+    public NumberFrameButton(int id, int centerX, int centerY, int width, int height) {
+        super(id,centerX,centerY, width, height, "");
     }
 
 
@@ -30,7 +26,7 @@ public class NumberFrameButton extends Button {
     public void renderButton() {
         RenderHelper.drawRect(getCenterX() - getWidth(), getCenterY() - getHeight(), getCenterX() + getWidth(), getCenterY() + getHeight(), rectColor);
 
-        RenderHelper.drawText(textBuilder.toString(), getCenterX() - getWidth() + 3, getCenterY() - (textSize / 2f), Color.white.hashCode());
+        RenderHelper.drawText(textBuilder.toString(), getCenterX() - getWidth() + 3, getCenterY() - (RenderHelper.fontRenderer.getStringHeight(getText()) / 2f), Color.white.hashCode());
     }
 
 
@@ -65,14 +61,14 @@ public class NumberFrameButton extends Button {
         }
 
         if (keys.contains(symbol)) {
-            if (RenderHelper.textRenderer.getStringWidth(getText()) < ((getWidth() * 2) - ((getWidth() * 2) * 0.1))) {
+            if (RenderHelper.fontRenderer.getStringWidth(getText()) < ((getWidth() * 2) - ((getWidth() * 2) * 0.1))) {
                 textBuilder.append(_char);
             }
             return;
         }
 
         if (symbol.equals(".")) {
-            if (!isDouble && RenderHelper.textRenderer.getStringWidth(getText()) < ((getWidth() * 2) - ((getWidth() * 2) * 0.1)) && textBuilder.length() != 0) {
+            if (!isDouble && RenderHelper.fontRenderer.getStringWidth(getText()) < ((getWidth() * 2) - ((getWidth() * 2) * 0.1)) && textBuilder.length() != 0) {
                 textBuilder.append(_char);
                 isDouble = true;
             }
@@ -85,8 +81,8 @@ public class NumberFrameButton extends Button {
     }
 
     @Override
-    public TextWithSize getText() {
-        return new TextWithSize(textBuilder.toString(), textSize);
+    public String getText() {
+        return textBuilder.toString();
     }
 
     public double getNumber() {

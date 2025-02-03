@@ -3,7 +3,6 @@ package com.ferra13671.Ferra2DEngine.Utils.Button.Buttons;
 
 import com.ferra13671.Ferra2DEngine.IO.KeyboardUtils;
 import com.ferra13671.Ferra2DEngine.Render.RenderHelper;
-import com.ferra13671.Ferra2DEngine.Render.TextRenderer.TextWithSize;
 import com.ferra13671.Ferra2DEngine.Utils.Button.Button;
 
 import java.awt.*;
@@ -14,8 +13,8 @@ public class TextFrameButton extends Button {
     private boolean selected = false;
 
 
-    public TextFrameButton(int id, int centerX, int centerY, int width, int height, int textSize) {
-        super(id,centerX,centerY, width, height, new TextWithSize("", textSize));
+    public TextFrameButton(int id, int centerX, int centerY, int width, int height) {
+        super(id,centerX,centerY, width, height, "");
     }
 
 
@@ -23,7 +22,7 @@ public class TextFrameButton extends Button {
     public void renderButton() {
         RenderHelper.drawRect(getCenterX() - getWidth(), getCenterY() - getHeight(), getCenterX() + getWidth(), getCenterY() + getHeight(), rectColor);
 
-        RenderHelper.drawText(textBuilder.toString(), getCenterX() - getWidth() + 3, getCenterY() - (text.size / 2f), Color.white.hashCode());
+        RenderHelper.drawText(textBuilder.toString(), getCenterX() - getWidth() + 3, getCenterY() - (RenderHelper.fontRenderer.getStringHeight(getText()) / 2f), Color.white.hashCode());
     }
 
     @Override
@@ -45,7 +44,7 @@ public class TextFrameButton extends Button {
 
         if (!selected) return;
 
-        if (RenderHelper.textRenderer.getStringWidth(textBuilder.toString(), text.size) < ((getWidth() * 2) - ((getWidth() * 2) * 0.1))) {
+        if (RenderHelper.fontRenderer.getStringWidth(textBuilder.toString()) < ((getWidth() * 2) - ((getWidth() * 2) * 0.1))) {
             textBuilder.append(_char);
         }
     }
@@ -56,7 +55,7 @@ public class TextFrameButton extends Button {
     }
 
     @Override
-    public TextWithSize getText() {
-        return new TextWithSize(textBuilder.toString(), text.size);
+    public String getText() {
+        return textBuilder.toString();
     }
 }
