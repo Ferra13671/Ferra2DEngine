@@ -28,30 +28,30 @@ public class RainbowUtils {
     private static final short[] rainbowDelays = {100, 200, 300, 500, 750, 700, 600, 850};
 
 
-    public static Color getCurrentRainbow(int  delay) {
+    public static int getCurrentRainbow(int  delay) {
         double rainbowState = Math.ceil((System.currentTimeMillis() + delay) / 20.0);
         rainbowState %= 360;
-        return Color.getHSBColor((float) (rainbowState / 360.0f), 0.5f, 1f);
+        return Color.getHSBColor((float) (rainbowState / 360.0f), 0.5f, 1f).getRGB();
     }
 
-    public static Color getCurrentRainbow(int delay, float speed) {
+    public static int getCurrentRainbow(int delay, float speed) {
         double rainbowState = Math.ceil((System.currentTimeMillis() + delay) / 20.0);
         float rSpeed = 360 * speed;
         rainbowState %= 360;
-        return Color.getHSBColor((float) (rainbowState / rSpeed), 0.5f, 1f);
+        return Color.getHSBColor((float) (rainbowState / rSpeed), 0.5f, 1f).getRGB();
     }
 
-    public static Color getCurrentRainbowWithType(byte type) {
+    public static int getCurrentRainbowWithType(byte type) {
         float speed = RainbowUtils.rainbowSpeeds[type - 1];
         short delay = RainbowUtils.rainbowDelays[type - 1];
 
         double rainbowState = Math.ceil((System.currentTimeMillis() + delay) / 20.0);
         float rSpeed = 360 * speed;
         rainbowState %= 360;
-        return Color.getHSBColor((float) (rainbowState / rSpeed), 0.5f, 1f);
+        return Color.getHSBColor((float) (rainbowState / rSpeed), 0.5f, 1f).getRGB();
     }
 
-    public static Color getCurrentRainbowWithType(byte type, float counter) {
+    public static int getCurrentRainbowWithType(byte type, float counter) {
         float speed = RainbowUtils.rainbowSpeeds[type - 1];
         int delay = RainbowUtils.rainbowDelays[type - 1];
 
@@ -60,6 +60,6 @@ public class RainbowUtils {
         double rainbowState = Math.ceil((System.currentTimeMillis() + delay) / 20.0);
         float rSpeed = 360 * speed;
         rainbowState %= 360;
-        return Color.getHSBColor((float) (rainbowState / rSpeed), 0.5f, 1f);
+        return Color.getHSBColor((float) (rainbowState / rSpeed), 0.5f, 1f).getRGB();
     }
 }

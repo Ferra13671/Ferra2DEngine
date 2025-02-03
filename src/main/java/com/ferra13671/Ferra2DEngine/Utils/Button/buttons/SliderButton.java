@@ -1,9 +1,10 @@
-package com.ferra13671.Ferra2DEngine.Utils.Button.Buttons;
+package com.ferra13671.Ferra2DEngine.Utils.Button.buttons;
+
 
 import com.ferra13671.Ferra2DEngine.Render.RenderHelper;
 import com.ferra13671.Ferra2DEngine.Utils.Button.Button;
+import com.ferra13671.Ferra2DEngine.Utils.ColorUtils;
 
-import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -25,13 +26,13 @@ public class SliderButton extends Button {
 
     @Override
     public void renderButton() {
-        RenderHelper.drawRect(getCenterX() - getWidth(), getCenterY() - getHeight(), getCenterX() + getWidth(), getCenterY() + getHeight(), rectColor);
+        RenderHelper.drawRect(getCenterX() - getWidth(), getCenterY() - getHeight(), getCenterX() + getWidth(), getCenterY() + getHeight(), RECT_COLOR);
 
-        RenderHelper.drawRect(getCenterX() - getWidth(), getCenterY() - getHeight(), getCenterX() - getWidth() + (int) renderWidth, getCenterY() + getHeight(), new Color(255,255,255,100));
+        RenderHelper.drawRect(getCenterX() - getWidth(), getCenterY() - getHeight(), getCenterX() - getWidth() + (int) renderWidth, getCenterY() + getHeight(), ColorUtils.fastRGBA(255,255,255,100));
 
-        RenderHelper.drawOutlineRect(getCenterX() - getWidth(), getCenterY() - getHeight(), getCenterX() + getWidth(), getCenterY() + getHeight(), 1, Color.white);
+        RenderHelper.drawOutlineRect(getCenterX() - getWidth(), getCenterY() - getHeight(), getCenterX() + getWidth(), getCenterY() + getHeight(), 1, -1);
 
-        RenderHelper.drawText(getText() + ": " + value, getCenterX() - getWidth() + 3, getCenterY() - (RenderHelper.fontRenderer.getStringHeight(getText()) / 2f), 1);
+        RenderHelper.drawText(getText() + ": " + value, getCenterX() - getWidth() + 3, getCenterY() - (int) (RenderHelper.fontRenderer.getStringHeight(getText()) / 2f), 1, -1, true);
     }
 
     @Override
@@ -62,7 +63,10 @@ public class SliderButton extends Button {
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         if (mouseButton == 0) {
-            dragging = true;
+            if (isMouseOnButton(mouseX, mouseY)) {
+                dragging = true;
+                updateButton(mouseX, mouseY);
+            }
         }
     }
 

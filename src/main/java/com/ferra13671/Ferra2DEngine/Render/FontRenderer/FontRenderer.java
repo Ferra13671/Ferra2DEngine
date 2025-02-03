@@ -31,7 +31,7 @@ public class FontRenderer implements Closeable {
     private final int pageSize;
     private final int paddingBetweenChars;
     private final String prebakeGlyphs;
-    private final int scaleMul = 2;
+    private final int scaleMul = 1;
     private Font font;
     private Future<Void> prebakeGlyphsFuture;
     private boolean initialized;
@@ -105,11 +105,11 @@ public class FontRenderer implements Closeable {
     public void draw(String s, double x, double y, int color, boolean shadow) {
         float[] rgba = ColorUtils.hashCodeToRGBA(color);
         if (shadow)
-            drawInternal(s, (float) x, (float) y, new float[]{0, 0, 0, rgba[3]}, true);
-        drawInternal(s, (float) x, (float) y, rgba, false);
+            drawInternal(s, (float) x, (float) y, new float[]{0, 0, 0, rgba[3]});
+        drawInternal(s, (float) x, (float) y, rgba);
     }
 
-    public void drawInternal(String s, float x, float y, float[] color, boolean shadow) {
+    public void drawInternal(String s, float x, float y, float[] color) {
         if (prebakeGlyphsFuture != null && !prebakeGlyphsFuture.isDone()) {
             try {
                 prebakeGlyphsFuture.get();
@@ -121,16 +121,13 @@ public class FontRenderer implements Closeable {
         glDisable(GL11.GL_CULL_FACE);
 
         char[] chars = s.toCharArray();
-        float xOffset = 0;
-        float yOffset = 0;
-        for (int i = 0; i < chars.length; i++) {
-            char c = chars[i];
-
+        float xOffset = x;
+        for (char c : chars) {
             Glyph glyph = locateGlyph(c);
             if (glyph != null) {
                 if (glyph.value != ' ') {
                     String i1 = glyph.owner.textureKey;
-                    DrawEntry entry = new DrawEntry(xOffset, yOffset, colors[0], colors[1], colors[2], glyph);
+                    DrawEntry entry = new DrawEntry(xOffset, y, colors[0], colors[1], colors[2], glyph);
                     GLYPH_PAGE_CACHE.computeIfAbsent(i1, integer -> new ArrayList<>()).add(entry);
                 }
                 xOffset += glyph.width;
@@ -154,9 +151,10 @@ public class FontRenderer implements Closeable {
                 float u2 = (float) (glyph.u + glyph.width) / owner.width;
                 float v2 = (float) (glyph.v + glyph.height) / owner.height;
 
-                RenderHelper.drawTextureRect(xo, yo, xo + w, yo + h, u1, v1, u2, v2, TextureStorage.getTexture(textureKey), new Color(cr, cg, cb, color[3]));
+                RenderHelper.drawTextureRect(xo, yo, xo + w, yo + h, u1, v1, u2, v2, TextureStorage.getTexture(textureKey), new Color(cr, cg, cb, color[3]).hashCode());
             }
         }
+        GLYPH_PAGE_CACHE.clear();
     }
 
     public float getStringWidth(String text) {

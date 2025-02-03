@@ -433,6 +433,10 @@ public class FerraMath {
         return (float)(s * z);
     }
 
+    public static int applyRange(int number, int min, int max) {
+        return Math.min(Math.max(min, number), max);
+    }
+
 
     private static final float[] half = {0.5f, -0.5f};
     private static final double[] ln2HI   ={  0x1.62e42feep-1, -0x1.62e42feep-1};

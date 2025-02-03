@@ -12,6 +12,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.text.DecimalFormat;
 
+import static com.ferra13671.Ferra2DEngine.Utils.ColorUtils.*;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
@@ -68,7 +69,7 @@ public class RenderHelper {
      * @param y2   End y coordinate.
      * @param color   Rectangle color.
      */
-    public static void drawRect(float x1, float y1, float x2, float y2, Color color) {
+    public static void drawRect(float x1, float y1, float x2, float y2, int color) {
         draw4ColorRect(x1,y1,x2,y2,color,color,color,color);
     }
 
@@ -82,7 +83,7 @@ public class RenderHelper {
      * @param color1   y1 color.
      * @param color2   y2 color.
      */
-    public static void drawVerticalGradientRect(float x1, float y1, float x2, float y2, Color color1, Color color2) {
+    public static void drawVerticalGradientRect(float x1, float y1, float x2, float y2, int color1, int color2) {
         draw4ColorRect(x1,y1,x2,y2, color1, color2, color1, color2);
     }
 
@@ -96,7 +97,7 @@ public class RenderHelper {
      * @param color1   x1 color.
      * @param color2   x2 color.
      */
-    public static void drawHorizontalGradientRect(float x1, float y1, float x2, float y2, Color color1, Color color2) {
+    public static void drawHorizontalGradientRect(float x1, float y1, float x2, float y2, int color1, int color2) {
         draw4ColorRect(x1,y1,x2,y2, color1, color1, color2, color2);
     }
 
@@ -112,16 +113,21 @@ public class RenderHelper {
      * @param x2y1Color   x2 y1 color.
      * @param x2y2Color   x2 y2 color.
      */
-    public static void draw4ColorRect(float x1, float y1, float x2, float y2, Color x1y1Color, Color x1y2Color, Color x2y1Color, Color x2y2Color) {
+    public static void draw4ColorRect(float x1, float y1, float x2, float y2, int x1y1Color, int x1y2Color, int x2y1Color, int x2y2Color) {
         glPushMatrix();
+
+        float[] x1y1C = hashCodeToRGBA(x1y1Color);
+        float[] x2y1C = hashCodeToRGBA(x2y1Color);
+        float[] x1y2C = hashCodeToRGBA(x1y2Color);
+        float[] x2y2C = hashCodeToRGBA(x2y2Color);
 
         enableBlend();
         glBegin(GL_QUADS);
 
-        glColor4f(x1y1Color.getRed() / 255f, x1y1Color.getGreen() / 255f, x1y1Color.getBlue() / 255f, x1y1Color.getAlpha() / 255f); glVertex2f(x1,y1);
-        glColor4f(x1y2Color.getRed() / 255f, x1y2Color.getGreen() / 255f, x1y2Color.getBlue() / 255f, x1y2Color.getAlpha() / 255f); glVertex2f(x1,y2);
-        glColor4f(x2y2Color.getRed() / 255f, x2y2Color.getGreen() / 255f, x2y2Color.getBlue() / 255f, x2y2Color.getAlpha() / 255f); glVertex2f(x2,y2);
-        glColor4f(x2y1Color.getRed() / 255f, x2y1Color.getGreen() / 255f, x2y1Color.getBlue() / 255f, x2y1Color.getAlpha() / 255f); glVertex2f(x2,y1);
+        glColor4f(x1y1C[0], x1y1C[1], x1y1C[2], x1y1C[3]); glVertex2f(x1,y1);
+        glColor4f(x1y2C[0], x1y2C[1], x1y2C[2], x1y2C[3]); glVertex2f(x1,y2);
+        glColor4f(x2y2C[0], x2y2C[1], x2y2C[2], x2y2C[3]); glVertex2f(x2,y2);
+        glColor4f(x2y1C[0], x2y1C[1], x2y1C[2], x2y1C[3]); glVertex2f(x2,y1);
         glEnd();
         glPopMatrix();
         disableBlend();
@@ -139,7 +145,7 @@ public class RenderHelper {
      * @param inverted   Whether texture coordinates will be inverted or not.
      */
     public static void drawTextureRect(float x1, float y1, float x2, float y2, GLTexture texture, boolean inverted) {
-        drawTextureRect(x1,y1,x2,y2,0,0,1,1, texture, Color.white, inverted);
+        drawTextureRect(x1,y1,x2,y2,0,0,1,1, texture, -1, inverted);
     }
 
 
@@ -153,7 +159,7 @@ public class RenderHelper {
      * @param texture   The texture that will be applied to the rectangle.
      */
     public static void drawTextureRect(float x1, float y1, float x2, float y2, GLTexture texture) {
-        drawTextureRect(x1,y1,x2,y2,0,0,1,1, texture, Color.white, true);
+        drawTextureRect(x1,y1,x2,y2,0,0,1,1, texture, -1, true);
     }
 
 
@@ -170,7 +176,7 @@ public class RenderHelper {
      *               and if the color is black, the texture will not be visible.
      * @param inverted   Whether texture coordinates will be inverted or not.
      */
-    public static void drawTextureRect(float x1, float y1, float x2, float y2, GLTexture texture, Color color, boolean inverted) {
+    public static void drawTextureRect(float x1, float y1, float x2, float y2, GLTexture texture, int color, boolean inverted) {
         drawTextureRect(x1,y1,x2,y2,0,0,1,1, texture, color, inverted);
     }
 
@@ -187,7 +193,7 @@ public class RenderHelper {
      *               if the color is gray, the texture will be shaded depending on the brightness of the color,
      *               and if the color is black, the texture will not be visible.
      */
-    public static void drawTextureRect(float x1, float y1, float x2, float y2, GLTexture texture, Color color) {
+    public static void drawTextureRect(float x1, float y1, float x2, float y2, GLTexture texture, int color) {
         drawTextureRect(x1,y1,x2,y2,0,0,1,1, texture, color, true);
     }
 
@@ -208,7 +214,7 @@ public class RenderHelper {
      * @param inverted   Whether texture coordinates will be inverted or not.
      */
     public static void drawTextureRect(float x1, float y1, float x2, float y2, float texPosX1, float texPosY1, float texPosX2, float texPosY2, GLTexture texture, boolean inverted) {
-        drawTextureRect(x1,y1,x2,y2,texPosX1,texPosY1,texPosX2,texPosY2,texture, Color.white, inverted);
+        drawTextureRect(x1,y1,x2,y2,texPosX1,texPosY1,texPosX2,texPosY2,texture, -1, inverted);
     }
 
 
@@ -227,7 +233,7 @@ public class RenderHelper {
      * @param texture   The texture that will be applied to the rectangle.
      */
     public static void drawTextureRect(float x1, float y1, float x2, float y2, float texPosX1, float texPosY1, float texPosX2, float texPosY2, GLTexture texture) {
-        drawTextureRect(x1,y1,x2,y2,texPosX1,texPosY1,texPosX2,texPosY2,texture, Color.white, true);
+        drawTextureRect(x1,y1,x2,y2,texPosX1,texPosY1,texPosX2,texPosY2,texture, -1, true);
     }
 
 
@@ -248,7 +254,7 @@ public class RenderHelper {
      *               if the color is gray, the texture will be shaded depending on the brightness of the color,
      *               and if the color is black, the texture will not be visible.
      */
-    public static void drawTextureRect(float x1, float y1, float x2, float y2, float texPosX1, float texPosY1, float texPosX2, float texPosY2, GLTexture texture, Color color) {
+    public static void drawTextureRect(float x1, float y1, float x2, float y2, float texPosX1, float texPosY1, float texPosX2, float texPosY2, GLTexture texture, int color) {
         drawTextureRect(x1, y1, x2, y2, texPosX1, texPosY1, texPosX2, texPosY2, texture, color, true);
     }
 
@@ -271,7 +277,7 @@ public class RenderHelper {
      *               and if the color is black, the texture will not be visible.
      * @param inverted   Whether texture coordinates will be inverted or not.
      */
-    public static void drawTextureRect(float x1, float y1, float x2, float y2, float texPosX1, float texPosY1, float texPosX2, float texPosY2, GLTexture texture, Color color, boolean inverted) {
+    public static void drawTextureRect(float x1, float y1, float x2, float y2, float texPosX1, float texPosY1, float texPosX2, float texPosY2, GLTexture texture, int color, boolean inverted) {
         rectVertex.put(new float[]{x1,y1, x2,y1, x2,y2, x1,y2}).position(0);
         if (inverted)
             customTextureCords.put(new float[]{texPosX1, texPosY1,   texPosX2, texPosY1,   texPosX2, texPosY2,   texPosX1, texPosY2}).position(0);
@@ -279,7 +285,10 @@ public class RenderHelper {
             customTextureCords.put(new float[]{texPosX2, texPosY2,   texPosX1, texPosY2,   texPosX1, texPosY1,   texPosX2, texPosY1}).position(0);
 
         enableBlend();
-        glColor4f(color.getRed() / 255.0f,color.getGreen() / 255.0f,color.getBlue() / 255.0f, color.getAlpha() / 255f);
+
+        float[] c = hashCodeToRGBA(color);
+
+        glColor4f(c[0],c[1],c[2], c[3]);
         glPushMatrix();
 
         glEnable(GL_TEXTURE_2D);
@@ -317,7 +326,7 @@ public class RenderHelper {
      * @param y3   y coordinate of the third point.
      * @param color   Triangle color.
      */
-    public static void drawTriangle(float x1, float y1, float x2, float y2, float x3, float y3, Color color) {
+    public static void drawTriangle(float x1, float y1, float x2, float y2, float x3, float y3, int color) {
         draw3ColorTriangle(x1,y1,x2,y2,x3,y3,color,color,color);
     }
 
@@ -334,14 +343,18 @@ public class RenderHelper {
      * @param color2   The color of the second point.
      * @param color3   The color of the third point.
      */
-    public static void draw3ColorTriangle(float x1, float y1, float x2, float y2, float x3, float y3, Color color1, Color color2, Color color3) {
+    public static void draw3ColorTriangle(float x1, float y1, float x2, float y2, float x3, float y3, int color1, int color2, int color3) {
         glPushMatrix();
+
+        float[] c1 = hashCodeToRGBA(color1);
+        float[] c2 = hashCodeToRGBA(color2);
+        float[] c3 = hashCodeToRGBA(color3);
 
         enableBlend();
         glBegin(GL_TRIANGLES);
-        glColor4f(color1.getRed() / 255f, color1.getGreen() / 255f, color1.getBlue() / 255f, color1.getAlpha() / 255f); glVertex2f(x1,y1);
-        glColor4f(color2.getRed() / 255f, color2.getGreen() / 255f, color2.getBlue() / 255f, color2.getAlpha() / 255f); glVertex2f(x2,y2);
-        glColor4f(color3.getRed() / 255f, color3.getGreen() / 255f, color3.getBlue() / 255f, color3.getAlpha() / 255f); glVertex2f(x3,y3);
+        glColor4f(c1[0], c1[1], c1[2], c1[3]); glVertex2f(x1,y1);
+        glColor4f(c2[0], c2[1], c2[2], c2[3]); glVertex2f(x2,y2);
+        glColor4f(c3[0], c3[1], c3[2], c3[3]); glVertex2f(x3,y3);
         glEnd();
 
         glPopMatrix();
@@ -357,7 +370,7 @@ public class RenderHelper {
      * @param size   Circle size.
      * @param color   Circle color.
      */
-    public static void drawCircle(float x, float y, float size, Color color) {
+    public static void drawCircle(float x, float y, float size, int color) {
         glPushMatrix();
         glTranslatef(x, y, 0);
 
@@ -367,7 +380,10 @@ public class RenderHelper {
 
         enableBlend();
         glBegin(GL_TRIANGLE_FAN);
-        glColor4f(color.getRed() / 255f, color.getGreen() / 255f,color.getBlue() / 255f, color.getAlpha() / 255f);
+
+        float[] c = hashCodeToRGBA(color);
+
+        glColor4f(c[0], c[1],c[2], c[3]);
         glVertex2d(0,0);
         for (int i = -1; i < cnt; i++) {
             x1 = Math.sin(a * i) * size;
@@ -388,7 +404,7 @@ public class RenderHelper {
      * @param heightSize   Size by y coordinates.
      * @param color   The color of this oval.
      */
-    public static void drawOval(float x, float y, float widthSize, float heightSize, Color color) {
+    public static void drawOval(float x, float y, float widthSize, float heightSize, int color) {
         drawOval(x, y, widthSize, heightSize, 0, 0, 0, color);
     }
 
@@ -406,7 +422,7 @@ public class RenderHelper {
      * @param zRotate   Rotation in Z coordinate
      * @param color   The color of this oval.
      */
-    public static void drawOval(float x, float y, float widthSize, float heightSize, double xRotate, double yRotate, double zRotate, Color color) {
+    public static void drawOval(float x, float y, float widthSize, float heightSize, double xRotate, double yRotate, double zRotate, int color) {
         glPushMatrix();
         glTranslatef(x, y, 0);
         glRotated(xRotate, 1, 0, 0);
@@ -419,7 +435,10 @@ public class RenderHelper {
 
         enableBlend();
         glBegin(GL_TRIANGLE_FAN);
-        glColor4f(color.getRed() / 255f, color.getGreen() / 255f,color.getBlue() / 255f, color.getAlpha() / 255f);
+
+        float[] c = hashCodeToRGBA(color);
+
+        glColor4f(c[0], c[1],c[2], c[3]);
         glVertex2d(0,0);
         for (int i = -1; i < cnt; i++) {
             x1 = Math.sin(a * i) * widthSize;
@@ -446,7 +465,7 @@ public class RenderHelper {
      *                and if the number of corners is 4, it will call the {@code drawRect} method.
      * @param color   Figure color.
      */
-    public static void drawFigureWithCustomNumberOfAngles(float x, float y, float size,int angles, Color color) {
+    public static void drawFigureWithCustomNumberOfAngles(float x, float y, float size,int angles, int color) {
         if (angles == 4) {
             drawRect(x - size, y - size, x + size, y + size, color);
         } else if (angles < 3) return;
@@ -459,7 +478,10 @@ public class RenderHelper {
 
         enableBlend();
         glBegin(GL_TRIANGLE_FAN);
-        glColor4f(color.getRed() / 255f, color.getGreen() / 255f,color.getBlue() / 255f, color.getAlpha() / 255f);
+
+        float[] c = hashCodeToRGBA(color);
+
+        glColor4f(c[0], c[1],c[2], c[3]);
         glVertex2d(0,0);
         for (int i = -1; i < angles; i++) {
             x1 = FerraMath.sin_rad(a * i) * size;
@@ -538,10 +560,13 @@ public class RenderHelper {
                 }
             }
 
-            Color color = RainbowUtils.getCurrentRainbow((int)(counter[0] * delay), speed);
+            int color = RainbowUtils.getCurrentRainbow((int)(counter[0] * delay), speed);
 
             glBegin(GL_QUADS);
-            glColor4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, color.getAlpha() / 255f);
+
+            float[] c = hashCodeToRGBA(color);
+
+            glColor4f(c[0], c[1],c[2], c[3]);
             glVertex2f(tX,y1);
             glVertex2f(tX,y2);
             glVertex2f(tX + dX,y2);
@@ -567,7 +592,7 @@ public class RenderHelper {
      * @param lineWidth   Line width.
      * @param color   The color of this outline rect.
      */
-    public static void drawOutlineRect(float x1, float y1, float x2, float y2, int lineWidth, Color color) {
+    public static void drawOutlineRect(float x1, float y1, float x2, float y2, int lineWidth, int color) {
         int outlineX;
         int outlineY;
         outlineX = x1 > x2 ? -lineWidth : lineWidth;
@@ -589,12 +614,26 @@ public class RenderHelper {
      * @param size   Text size(default = 1).
      * @param color   Text Color.
      */
-    public static void drawText(String text, float x, float y, float size, Color color) {
+    public static void drawText(String text, float x, float y, float size, int color) {
+        drawText(text, x, y, size, color, false);
+    }
+
+    /**
+     * Draws text starting at the specified coordinates, size, color and shadow.
+     *
+     * @param text   Text to be drawn.
+     * @param x   Initial x coordinate.
+     * @param y   Initial y coordinate.
+     * @param size   Text size(default = 1).
+     * @param color   Text Color.
+     * @param shadow   Does the shadow behind the text need to be rendered.
+     */
+    public static void drawText(String text, float x, float y, float size, int color, boolean shadow) {
         if (size != 1) {
             glPushMatrix();
             glScalef(size, size, 1);
         }
-        fontRenderer.draw(text, x, y, color.hashCode(), false);
+        fontRenderer.draw(text, x / size, y / size, color, shadow);
         if (size != 1) glPopMatrix();
     }
 
@@ -611,7 +650,7 @@ public class RenderHelper {
             glPushMatrix();
             glScalef(size, size, 1);
         }
-        fontRenderer.draw(text, x, y, -1, false);
+        fontRenderer.draw(text, x / size, y / size, -1, false);
         if (size != 1) glPopMatrix();
     }
 }
