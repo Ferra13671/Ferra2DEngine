@@ -29,7 +29,7 @@ switch (OperatingSystem.current()) {
 }
 
 group = 'com.ferra13671'
-version = 'v1.1.2'
+version = 'v1.1.4'
 
 repositories {
     maven { url 'https://jitpack.io' }
