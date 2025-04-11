@@ -1,4 +1,5 @@
 plugins {
+    id("com.github.johnrengelman.shadow") version "5.2.0"
     id 'java'
 }
 
@@ -28,7 +29,7 @@ switch (OperatingSystem.current()) {
 }
 
 group = 'com.ferra13671'
-version = 'v1.1.3'
+version = 'v1.1.2'
 
 repositories {
     maven { url 'https://jitpack.io' }
@@ -75,6 +76,22 @@ test {
     useJUnitPlatform()
 }
 
+shadowJar {
+    dependencies {
+        include(dependency ("org.lwjgl:lwjgl-bom:$lwjglVersion"))
+        include(dependency ("org.lwjgl:lwjgl"))
+        include(dependency ("org.lwjgl:lwjgl-glfw"))
+        include(dependency ("org.lwjgl:lwjgl-jawt"))
+        include(dependency ("org.lwjgl:lwjgl-meow"))
+        include(dependency ("org.lwjgl:lwjgl-openal"))
+        include(dependency ("org.lwjgl:lwjgl-opencl"))
+        include(dependency ("org.lwjgl:lwjgl-opengl"))
+        include(dependency ("org.lwjgl:lwjgl-opengles"))
+        include(dependency ("org.lwjgl:lwjgl-stb"))
+        include(dependency ("org.joml:joml:${jomlVersion}"))
+    }
+}
+
 javadoc {
     options.tags = ["Note"]
 }
@@ -86,4 +103,5 @@ tasks.register("javadocJar", Jar) {
 
 build {
     dependsOn javadocJar
+    dependsOn(shadowJar)
 }
