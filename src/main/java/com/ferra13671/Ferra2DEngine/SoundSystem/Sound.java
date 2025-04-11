@@ -1,6 +1,7 @@
 package com.ferra13671.Ferra2DEngine.SoundSystem;
 
 import java.io.File;
+import java.io.InputStream;
 
 import static org.lwjgl.openal.AL10.*;
 
@@ -19,6 +20,17 @@ public class Sound {
         this.path = file.getAbsolutePath();
 
         int[] data = SoundManager.getOggMusic(this.path, false);
+
+        if (data != null) {
+            this.bufferId = data[0];
+            this.sourceId = data[1];
+        }
+    }
+
+    public Sound(InputStream stream) {
+        this.path = "InputStream";
+
+        int[] data = SoundManager.getOggMusic(stream, false);
 
         if (data != null) {
             this.bufferId = data[0];

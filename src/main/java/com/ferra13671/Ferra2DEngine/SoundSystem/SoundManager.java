@@ -5,16 +5,19 @@ import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.ALCapabilities;
+import org.lwjgl.system.MemoryUtil;
 
+import java.io.*;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.openal.ALC10.alcMakeContextCurrent;
 import static org.lwjgl.stb.STBVorbis.stb_vorbis_decode_filename;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryStack.stackPop;
 import static org.lwjgl.system.libc.LibCStdlib.free;
 
 /**
@@ -73,6 +76,36 @@ public class SoundManager {
         alcCloseDevice(audioDevice);
     }
 
+    /**
+     * Converts and prepares the .ogg file for further playback.
+     *
+     * @param stream   File InputStream.
+     * @param loop   Whether the sound is looped or not.
+     * @return   bufferId and sourceId needed for further work with sound.
+     */
+    public static int[] getOggMusic(InputStream stream, boolean loop) {
+        Path path;
+        try {
+            path = Files.createFile(Paths.get("temp" + (int) (System.currentTimeMillis() / 10000)));
+            BufferedInputStream inputStream = new BufferedInputStream(stream);
+            FileOutputStream outputStream = new FileOutputStream(path.toFile());
+
+            byte[] db = new byte[1024];
+            int b;
+            while ((b = inputStream.read(db, 0, 1024)) != -1)
+                outputStream.write(db, 0, b);
+
+            inputStream.close();
+            outputStream.close();
+
+            int[] data = getOggMusic(path.toFile().getAbsolutePath(), loop);
+            Files.delete(path);
+            return data;
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
 
     /**
      * Converts and prepares the .ogg file for further playback.
@@ -85,17 +118,15 @@ public class SoundManager {
         int[] musicData = {0,0}; // bufferId , sourceId
 
         // Allocate space to store the return information from stb
-        stackPush();
-        IntBuffer channelsBuffer = stackMallocInt(1);
-        stackPush();
-        IntBuffer sampleRateBuffer = stackMallocInt(1);
+        IntBuffer channelsBuffer = MemoryUtil.memAllocInt(1);
+        IntBuffer sampleRateBuffer = MemoryUtil.memAllocInt(1);
 
         ShortBuffer rawAudioBuffer = stb_vorbis_decode_filename(path, channelsBuffer, sampleRateBuffer);
 
         if (rawAudioBuffer == null) {
             logger.logError("Could not load music '" + path + "'");
-            stackPop();
-            stackPop();
+            MemoryUtil.memFree(channelsBuffer);
+            MemoryUtil.memFree(sampleRateBuffer);
             return null;
         }
 
@@ -103,8 +134,8 @@ public class SoundManager {
         int channels = channelsBuffer.get();
         int sampleRate = sampleRateBuffer.get();
         // Free
-        stackPop();
-        stackPop();
+        MemoryUtil.memFree(channelsBuffer);
+        MemoryUtil.memFree(sampleRateBuffer);
 
         // Find the correct openAL format
         int format = -1;
