@@ -93,6 +93,10 @@ shadowJar {
     }
 }
 
+javadoc {
+    options.tags = ["Note"]
+}
+
 tasks.register("javadocJar", Jar) {
     from javadoc
     archiveClassifier.set("javadoc")

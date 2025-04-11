@@ -503,7 +503,7 @@ public class RenderHelper {
      * @param y2   End y coordinate.
      * @param rainbowType   Rainbow Speed Mode.
      *
-     * @implNote <b> FAST and VERYFAST modes are not recommended because color breaks are noticeable when using them. </b>
+     * @Note <b> FAST and VERYFAST modes are not recommended because color breaks are noticeable when using them. </b>
      */
     public static void drawGradientRainbowRect(int x1, int y1, int x2, int y2, RainbowUtils.RainbowRectMode rainbowType) {
         drawGradientRainbowRect( x1, y1, x2, y2, rainbowType, 1);
@@ -520,7 +520,7 @@ public class RenderHelper {
      * @param rainbowType   Rainbow Speed Mode.
      * @param qualityFactor   Factor that determines the quality of the rainbow(default 1).
      *
-     * @note <b> FAST and VERYFAST modes are not recommended because color breaks are noticeable when using them. </b>
+     * @Note <b> FAST and VERYFAST modes are not recommended because color breaks are noticeable when using them. </b>
      * <p></p>
      * For small rectangles standard quality is sufficient, but for large rectangles it is better to use quality 3.
      * However, quality strongly affects performance, so it is not recommended to set it higher than 4-5.

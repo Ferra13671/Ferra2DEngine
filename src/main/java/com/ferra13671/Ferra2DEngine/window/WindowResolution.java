@@ -8,7 +8,7 @@ import java.awt.*;
 
 public enum WindowResolution {
     /**
-     * The resolution of your monitor divided by 2. For example 1920x1080 -> 960x540.
+     * The resolution of your monitor divided by 2. For example {@code 1920x1080 -> 960x540.}
      */
     HALF_THE_MONITOR_SIZE(Toolkit.getDefaultToolkit().getScreenSize().width / 2, Toolkit.getDefaultToolkit().getScreenSize().height / 2),
 

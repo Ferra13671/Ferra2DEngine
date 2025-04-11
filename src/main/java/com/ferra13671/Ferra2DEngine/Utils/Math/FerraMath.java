@@ -234,7 +234,7 @@ public class FerraMath {
      * Copied and modified from the {@code compute(final double x, final double y)} method
      * from the {@code FdLibm.Pow (java 17)} class.
      *
-     * @note The average approximate error compared to the standard method is 0.00000011886641%.
+     * @Note The average approximate error compared to the standard method is 0.00000011886641%.
      *
      *
      * @param number   The number to be raised to a degree.

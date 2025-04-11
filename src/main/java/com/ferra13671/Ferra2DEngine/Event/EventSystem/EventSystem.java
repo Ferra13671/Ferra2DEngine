@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * put the desired event as input, and use {@code register(Object object)} to register the class they reside in. Example method:
  * <p>
  * {@code
- * @EventSubscriber }
+ * .@EventSubscriber  //remove . }
  * <p>
  * {@code public void onInput(InputEvent.KeyInputEvent e) }
  * <p>

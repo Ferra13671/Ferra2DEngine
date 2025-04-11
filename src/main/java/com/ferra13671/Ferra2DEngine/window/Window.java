@@ -75,7 +75,7 @@ public final class Window implements Closeable {
     /**
      * Creates a new GLFW window.
      * <p>
-     * <b>Note that the {@link #createWindow(int, int, boolean)} method must be used to make the window fully ready for use.
+     * <b>Note that the {@link #createWindow(int, int, boolean)} method must be used to make the window fully ready for use.</b>
      */
     public Window() {
         if (!Ferra2DEngine.isInited()) Ferra2DEngine.init();
