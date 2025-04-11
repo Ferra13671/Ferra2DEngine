@@ -93,11 +93,6 @@ shadowJar {
     }
 }
 
-javadoc {
-    options.addStringOption("Xdoclint:none", "-quiet")
-    options.encoding = "UTF-8"
-}
-
 tasks.register("javadocJar", Jar) {
     from javadoc
     archiveClassifier.set("javadoc")
